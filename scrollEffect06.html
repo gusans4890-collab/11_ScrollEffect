@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>스크롤 이펙트</title>
+        <link rel="stylesheet" href="font.css" />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+                color: #fff;
+                font-family: "Pretendard";
+                font-weight: normal;
+            }
+            .wrap {
+                /* background: #222; */
+                color: #000;
+            }
+            #header {
+                padding: 20px;
+            }
+            #header h1 {
+                display: inline-block;
+                font-size: 20px;
+                color: #fff;
+                background-color: #00051d;
+                border-radius: 15px;
+                padding: 10px 20px;
+                margin-bottom: 8px;
+            }
+            #content {
+                max-width: 1600px;
+                margin: 0 auto;
+                width: 100%;
+                overflow: hidden;
+                /*확대축소해보고 꺠지면 넣어주세요*/
+            }
+            #footer {
+                padding-bottom: 3vw;
+                border-top: 5px dashed #00000055;
+            }
+            #footer h2 {
+                font-size: 3vw;
+                line-height: 1.2;
+                font-style: italic;
+                opacity: 0.5;
+                text-align: center;
+            }
+
+            .content_item {
+                width: 1000px;
+                max-width: 70vw;
+                margin: 30vw 0;
+                /* background: rgba(255,255,255,.3); */
+                text-align: right;
+                position: relative;
+                padding-top: 10vw;
+            }
+            .content_item:nth-child(even) {
+                margin-left: auto; /*왼쪽 정렬을 초기화해서 오른쪽에 자동으로 붙는다*/
+                text-align: left;
+            }
+            .content_item_country {
+                font-size: 16vw;
+                font-weight: 100;
+                color: #00051d;
+                opacity: 0.07;
+                position: absolute;
+                right: -4vw;
+                top: -1.2vw;
+            }
+            .content_item:nth-child(even) .content_item_country {
+                right: auto;
+                left: -5vw;
+            }
+            .content_item_city {
+                color: #00051d;
+                padding-bottom: 1vw;
+                font-size: 4vw;
+            }
+            .content_item_imgWrap {
+                width: 100%;
+                padding-bottom: 56%;
+                /* background: #000; */
+                position: relative;
+                overflow: hidden;
+            }
+            .content_item_img {
+                position: absolute;
+                left: -10%;
+                top: -10%;
+                width: 120%;
+                height: 120%;
+                background-repeat: no-repeat;
+                background-size: cover;
+                filter: saturate(0%);
+                transition: filter 1s;
+            }
+            .content_item_img:hover {
+                filter: saturate(100%);
+            }
+            .content_item_desc {
+                color: #950505;
+                font-size: 4vw;
+                line-height: 1.4;
+                word-break: keep-all;
+                margin-top: -6vw;
+                margin-right: -3vw;
+                position: relative;
+                z-index: 100;
+            }
+            .content_item:nth-child(even) .content_item_desc {
+                margin-right: 0;
+                margin-left: -3vw;
+            }
+            /* 프랑스-파리/ 체코-프라하/ 일본 — 도쿄 /이탈리아 — 로마 /영국 — 런던 /스페인 — 바르셀로나/호주 — 시드니 /중국 — 베이징 /태국 — 방콕*/
+            .content_item:nth-child(1) .content_item_img {
+                background-image: url(https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+            }
+            .content_item:nth-child(2) .content_item_img {
+                background-image: url(https://images.unsplash.com/photo-1634842543077-4ff83edb7d9f?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+            }
+            .content_item:nth-child(3) .content_item_img {
+                background-image: url(https://images.unsplash.com/photo-1549693578-d683be217e58?q=80&w=1177&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dg);
+            }
+            .content_item:nth-child(4) .content_item_img {
+                background-image: url(https://plus.unsplash.com/premium_photo-1661964123160-8d049fa07f0c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+            }
+            .content_item:nth-child(5) .content_item_img {
+                background-image: url(https://images.unsplash.com/photo-1520986606214-8b456906c813?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dg);
+            }
+            .content_item:nth-child(6) .content_item_img {
+                background-image: url(https://images.unsplash.com/photo-1630219694734-fe47ab76b15e?q=80&w=1052&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dg);
+            }
+            .content_item:nth-child(7) .content_item_img {
+                background-image: url(https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?q=80&w=1333&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+            }
+            .content_item:nth-child(8) .content_item_img {
+                background-image: url(https://images.unsplash.com/photo-1628001204260-c5df3cc58f02?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+            }
+            .content_item:nth-child(9) .content_item_img {
+                background-image: url(https://images.unsplash.com/photo-1578167635648-df79e1565908?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+            }
+
+            /* nav */
+            .nav {
+                position: fixed;
+                right: 20px;
+                top: 20px;
+                z-index: 1000;
+                background: rgba(0, 0, 0, 0.4);
+                padding: 15px 20px;
+                border-radius: 50px;
+                transition: top 0.4s ease;
+            }
+            .nav li {
+                display: inline-block;
+                list-style: none;
+            }
+            .nav li a {
+                color: #fff;
+                text-decoration: none;
+                display: inline-block;
+                padding: 5px 20px;
+                height: 30px;
+                text-align: center;
+                line-height: 30px;
+                border-radius: 30px;
+            }
+            .nav li.active a {
+                background: #fff;
+                color: #000;
+            }
+
+            /* info */
+            .scroll {
+                position: fixed;
+                left: 20px;
+                bottom: 20px;
+                z-index: 1000;
+                background: rgba(0, 0, 0, 0.4);
+                color: #fff;
+                height: 40px;
+                line-height: 40px;
+                border-radius: 50px;
+                text-align: center;
+                font-size: 12px;
+                padding: 0px 20px;
+            }
+        </style>
+    </head>
+    <body class="wrap">
+        <!-- info -->
+        <div class="scroll">scrollTop() : <span>0</span>px</div>
+
+        <!-- //info -->
+        <header id="header">
+            <h1>Scroll효과06 - 이미지 이질감</h1>
+        </header>
+        <!-- //header -->
+        <!-- nav -->
+        <nav class="nav">
+            <ul>
+                <li class="active"><a href="#section1">파리</a></li>
+                <li><a href="#section2">프라하</a></li>
+                <li><a href="#section3">도쿄</a></li>
+                <li><a href="#section4">로마</a></li>
+                <li><a href="#section5">런던</a></li>
+                <li><a href="#section6">바르셀로나</a></li>
+                <li><a href="#section7">시드니</a></li>
+                <li><a href="#section8">베이징</a></li>
+                <li><a href="#section9">방콕</a></li>
+            </ul>
+        </nav>
+        <!-- //nav -->
+        <main id="content">
+            <section id="section1" class="content_item">
+                <span class="content_item_country">France</span>
+                <h2 class="content_item_city">1.Paris</h2>
+                <figure class="content_item_imgWrap">
+                    <div class="content_item_img"></div>
+                </figure>
+                <p class="content_item_desc">예술과 낭만이 골목마다 흐르는 도시, 세계 문화의 중심 파리</p>
+            </section>
+            <!-- //section1 -->
+
+            <section id="section2" class="content_item">
+                <span class="content_item_country">Czech</span>
+                <h2 class="content_item_city">2.Praha</h2>
+                <figure class="content_item_imgWrap">
+                    <div class="content_item_img"></div>
+                </figure>
+                <p class="content_item_desc">붉은 지붕과 중세의 시간이 흐르는 동화 같은 도시 프라하</p>
+            </section>
+            <!-- //section2 -->
+
+            <section id="section3" class="content_item">
+                <span class="content_item_country">Japan</span>
+                <h2 class="content_item_city">3.Tokyo</h2>
+                <figure class="content_item_imgWrap">
+                    <div class="content_item_img"></div>
+                </figure>
+                <p class="content_item_desc">전통 사원과 네온빛 거리가 공존하는 역동적인 도시 도쿄</p>
+            </section>
+            <!-- //section3 -->
+
+            <section id="section4" class="content_item">
+                <span class="content_item_country">Italy</span>
+                <h2 class="content_item_city">4.Rome</h2>
+                <figure class="content_item_imgWrap">
+                    <div class="content_item_img"></div>
+                </figure>
+                <p class="content_item_desc">고대 제국의 흔적과 예술이 살아 숨 쉬는 영원의 도시 로마</p>
+            </section>
+            <!-- //section4 -->
+
+            <section id="section5" class="content_item">
+                <span class="content_item_country">England</span>
+                <h2 class="content_item_city">5.London</h2>
+                <figure class="content_item_imgWrap">
+                    <div class="content_item_img"></div>
+                </figure>
+                <p class="content_item_desc">클래식한 건축과 현대 문화가 어우러진 세계 도시 런던</p>
+            </section>
+            <!-- //section5 -->
+
+            <section id="section6" class="content_item">
+                <span class="content_item_country">Spain</span>
+                <h2 class="content_item_city">6.Barcelona</h2>
+                <figure class="content_item_imgWrap">
+                    <div class="content_item_img"></div>
+                </figure>
+                <p class="content_item_desc">가우디의 창의적인 건축과 지중해의 햇살이 어우러진 바르셀로나</p>
+            </section>
+            <!-- //section6 -->
+
+            <section id="section7" class="content_item">
+                <span class="content_item_country">Australia</span>
+                <h2 class="content_item_city">7.Sydney</h2>
+                <figure class="content_item_imgWrap">
+                    <div class="content_item_img"></div>
+                </figure>
+                <p class="content_item_desc">푸른 바다와 도시의 스카이라인이 아름다운 항구 도시 시드니</p>
+            </section>
+            <!-- //section7 -->
+
+            <section id="section8" class="content_item">
+                <span class="content_item_country">China</span>
+                <h2 class="content_item_city">8.Beijing</h2>
+                <figure class="content_item_imgWrap">
+                    <div class="content_item_img"></div>
+                </figure>
+                <p class="content_item_desc">황제의 역사와 현대 도시가 공존하는 중국의 수도 베이징</p>
+            </section>
+            <!-- //section8 -->
+
+            <section id="section9" class="content_item">
+                <span class="content_item_country">Thailand</span>
+                <h2 class="content_item_city">9.Bangkok</h2>
+                <figure class="content_item_imgWrap">
+                    <div class="content_item_img"></div>
+                </figure>
+                <p class="content_item_desc">화려한 사원과 활기찬 거리 문화가 가득한 매력적인 도시 방콕</p>
+            </section>
+            <!-- //section9 -->
+        </main>
+        <!-- //main -->
+
+        <footer id="footer">
+            <h2>Web Publishing</h2>
+        </footer>
+        <!-- //footer -->
+        <!-- script -->
+        <script src="js/sEffect06.js"></script>
+    </body>
+</html>
